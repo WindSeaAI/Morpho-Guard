@@ -1,0 +1,51 @@
+{
+  "repository": "JailbreakBench/artifacts",
+  "revision": "909e68c01d94222b8ad2e397a017e2e12e2adb73",
+  "retrieved_date": "2026-11-07",
+  "sources": [
+    {
+      "method": "PAIR",
+      "url": "https://raw.githubusercontent.com/JailbreakBench/artifacts/909e68c01d94222b8ad2e397a017e2e12e2adb73/attack-artifacts/PAIR/black_box/vicuna-13b-v1.5.json",
+      "sha256": "18b101386419a98fbdf45cb987069f83af3a40d5e0f7f0d32c4e9dc5ecc049b4",
+      "indices": [
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        17,
+        19
+      ]
+    },
+    {
+      "method": "random_search",
+      "url": "https://raw.githubusercontent.com/JailbreakBench/artifacts/909e68c01d94222b8ad2e397a017e2e12e2adb73/attack-artifacts/prompt_with_random_search/black_box/vicuna-13b-v1.5.json",
+      "sha256": "9d87a56659f617438feb5770bb2c8e4c2dbbd1bd62964f2c1a8775988017ac5d",
+      "indices": [
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        17,
+        19
+      ]
+    }
+  ],
+  "case_count": 32,
+  "attack_count": 16,
+  "benign_count": 16,
+  "benign_origin": "Assistant-authored; not JBB benign benchmark",
+  "selection": "Preselected behavior indices 10,11,12,13,14,15,17,19; two methods; non-null prompts required; not selected by Qwen success",
+  "dataset_sha256": "c1fd1ecbc0c83f0e291ae260376c54260f083319a894a24eaa5de71846b9048c",
+  "official_jbb_protocol": false,
+  "limitations": [
+    "Artifacts originally optimized for vicuna-13b-v1.5, transferred unchanged to Qwen.",
+    "No new attack search, official judge, or leaderboard protocol.",
+    "Broader cyber goals exceed the probe narrow training target.",
+    "Do not use upstream jailbroken flags as labels for the new model.",
+    "Two attacks for the same behavior are correlated, not 16 independent behavior groups."
+  ]
+}
