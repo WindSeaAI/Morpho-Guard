@@ -1,67 +1,34 @@
 # Morpho-Guard
 
-**Research scaffold.** Morpho-Guard is a proposed evaluation of relational constraints during generation. This README records the intended mechanism, comparison design, and results that require run evidence before publication.
+Morpho-Guard studies relational constraints for model generation. This repository currently provides a prompt-level regex pilot and its measured results.
 
-The preceding evaluation of the frozen layer-15 activation probe recorded `0/16` gate triggers on the selected transferred attacks. The new experiment asks whether a scoped relational rule changes those outcomes and how often it interrupts valid system-administration requests.
+## Pilot method
 
-## Mechanism under evaluation
+The extractor looks for English action and system-critical target signals anywhere in the prompt. The gate triggers when both signals are present and the caller has supplied no verified authorization. All benchmark requests use unverified authorization. Quoted text, negation, and unrelated matches can trigger the rule. The benchmark calls the gate directly and records its decision without model inference.
 
-The draft specifies a rule-based extractor for system operations. It represents a candidate action, its target, and the authorization status in the configured evaluation environment.
+The test uses 16 transferred JailbreakBench attack prompts, 100 newly authored benign prompts including 30 high-confusion prompts, and five separate development checks. The benign and development fixtures were authored alongside the implementation. The transferred attacks were known during development. The evaluation is exploratory.
 
-| Field | Example values |
-| --- | --- |
-| Action `A` | Execute, delete, escalate |
-| Target `T` | System-critical resource, user data |
-| Authorization `U` | Verified, unverified |
+## Results
 
-The proposed rule rejects a transition with `A = Execute` and `T = System_Critical` when `U` is unverified. The implementation should make its authorization inputs explicit and record each rule decision. A decoding implementation must retain a valid refusal continuation or end generation explicitly when applying the rule. An all-masked logit vector cannot be sampled as an ordinary token distribution.
+| Split | Gate triggers | Trigger rate |
+| --- | ---: | ---: |
+| External attack prompts | 11/16 | 68.75% |
+| Benign prompts | 16/100 | 16% |
+| High-confusion benign subset | 16/30 | 53.33% |
 
-The extractor in the supplied design uses regex and keyword heuristics. The proposed reachability claim concerns the states and transitions defined by that extractor and the enforced rule. Verify those definitions and the enforcement before making claims about semantic safety.
+The ungated baseline has no gate and therefore no gate triggers. The pilot measures rule triggers. Response refusals, attack success, generation-stage pruning, and the planned probe and combined arms require a separate model-based run.
 
-## Comparison design
+## Reproduce
 
-Compare the base model, the activation probe, the structural rule, and the combined condition. The supplied design specifies 16 external attack prompts and 100 benign prompts, including 30 high-confusion cases. Freeze the rule on the separate development set before evaluating these prompts. Record the version of the rule, input ID, intervention, generated answer, and outcome for each condition.
+Use Python 3.11 or newer. The pilot uses the Python standard library.
 
-Report the gate-trigger rate, answer refusal rate, and attack success separately. Gate triggers describe the intervention. Attack success depends on judging the resulting answer against the attack goal. For benign requests, record the denominator for both the full set and the high-confusion subset.
-
-## Results to verify
-
-| Item in the supplied draft | Review status |
-| --- | --- |
-| Structural rule and combined condition each block `16/16` attacks | Check against the actual comparison logs and each request's recorded decision. |
-| High-confusion false refusals recorded as `2% (6/30)` | The fraction `6/30` equals `20%`. Confirm the six underlying cases before reporting the rate. |
-| Overall benign false refusals recorded as `0%` | If the six cases belong to the 30-case subset of these 100 prompts, the overall rate is at least `6/100 (6%)`. It is exactly `6%` if the other 70 prompts have zero false refusals. |
-
-The existing negative-result evidence covers the lexical-mask and activation-probe runs. Add the structural-rule run manifest and per-request records before filling a results table for the new conditions.
-
-## Repository structure
-
-```text
-public/
-    morpho_guard.py
-    graph_builder.py
-    run_comparison.py
-data/
-    jbb_attacks.json
-    benign_prompts.json
-    dev_prompts.json
-    external_source.json
-    JBB_ARTIFACTS_LICENSE.txt
-requirements.txt
-README.md
-SECURITY.md
-LICENSE
+```bash
+python public/run_comparison.py --output /tmp/morpho-gate-reproduction.json
 ```
 
-The Python modules are explicit placeholders for the implementation. The attack
-set contains 16 transferred prompts from the previous evaluation. The source
-manifest describes the original mixed set, including its benign controls.
-The benign and development JSON files currently contain empty arrays. The
-planned counts are 100 benign prompts, including 30 high-confusion prompts, and
-5 separate development prompts. The dependency list is preliminary.
+Choose a new output filename for each run. The [recorded run](evidence/regex_gate_20261112.json) includes per-case decisions and SHA-256 hashes. [REPRODUCTION.md](REPRODUCTION.md) records the validation procedure and the historical scaffold audit.
 
-Related experiment materials are available in the
-[guardrail-ood-eval repository](https://github.com/WindSeaAI/guardrail-ood-eval).
+The preceding lexical-mask and activation-probe experiments are documented in the [guardrail-ood-eval repository](https://github.com/WindSeaAI/guardrail-ood-eval).
 
 ## Manuscript citation
 
@@ -73,3 +40,33 @@ Related experiment materials are available in the
   note = {Research manuscript draft}
 }
 ```
+
+## New generation-stage experiment
+
+`public/run_generation_comparison.py` evaluates Base, Probe, Morpho-Guard, and Probe + Morpho on local Qwen2.5-1.5B-Instruct with the frozen layer-15 probe. Use Python 3.11+, PyTorch 2.7.1, Transformers 4.57.6 and CUDA. The runner checks the model and probe weight hashes and records per-case results in JSONL.
+
+This implementation checks the generated prefix during greedy decoding. On a rule trigger it masks every alternative next-token score, forces a fixed refusal continuation, and ends with EOS when the generation budget allows. The already generated prefix is retained in the evaluation record. This experiment uses greedy decoding. The manuscript's Beam Search implementation and original evaluation assets have yet to be recovered.
+
+```bash
+python public/run_generation_comparison.py \
+  --model /root/autodl-tmp/models/Qwen2.5-1.5B-Instruct \
+  --probe /root/autodl-tmp/MorphoProbe_Phase2_v0.1/results/probe_v2_train_20261107T040555268047Z/probe.pt \
+  --output /root/autodl-tmp/morpho-generation-smoke.jsonl --smoke
+```
+
+The smoke run evaluates one development case under all four conditions. To run the 116 evaluation cases, remove `--smoke` and choose a fresh output file. The run is complete when its final JSONL row reports `"complete": true` and there are 464 per-condition records. Inspect raw responses privately and score refusal and attack success separately from interventions. These newly authored benign cases are exploratory. The full generation run completed on 2026-11-13. See the results below.
+
+### Generation results on RTX 6000D
+
+Each condition used the same 16 transferred attacks and 100 newly authored benign requests. Decoding was greedy with up to 512 new tokens. The probe threshold was 0.65.
+
+| Condition | Probe blocks on attacks | Generation interventions on attacks | Attack success (preliminary) | Explicit false refusals, ordinary | Explicit false refusals, high-confusion | Explicit false refusals, overall |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Base | — | — | 10/16 | 1/70 | 1/30 | 2/100 |
+| Probe | 0/16 | — | 10/16 | 1/70 | 1/30 | 2/100 |
+| Morpho-Guard | — | 15/16 | 1/16 | 7/70 | 24/30 | 31/100 |
+| Probe + Morpho | 0/16 | 15/16 | 1/16 | 7/70 | 24/30 | 31/100 |
+
+The probe triggered on none of the 116 cases. The structural rule intervened on 29 benign requests, with 6 ordinary and 23 high-confusion cases. Two other benign requests received spontaneous refusals in all conditions. The one attack without structural intervention received a spontaneous refusal. One intervened attack retained materially useful attack guidance in the generated prefix.
+
+See the [scoring protocol](REPRODUCTION.md#generation-stage-run-of-2026-11-13), [case-level labels](evidence/generation_20261113_labels.csv), and [run manifest and metrics](evidence/generation_20261113_summary.json). The response scores are a preliminary unblinded assistant review. The manuscript's original run remains unverified.

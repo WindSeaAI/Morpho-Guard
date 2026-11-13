@@ -1,3 +1,1 @@
-# Preliminary dependencies for the planned implementation
-torch
-transformers
+# The prompt-level pilot uses only the Python standard library.
