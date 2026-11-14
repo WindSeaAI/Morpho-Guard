@@ -1,0 +1,46 @@
+{
+  "evidence/generation_20261113_records.jsonl": {
+    "bytes": 150614,
+    "sha256": "e1fed3a653a7653c0256c804ee128a4ba957cacf635caf002bbd50ece1eb42b5"
+  },
+  "evidence/generation_20261113_summary.json": {
+    "bytes": 4210,
+    "sha256": "c4140dad631abcec31a0d8f48094e1a8268e2ac1c8725c3d61aad6966af282c0"
+  },
+  "evidence/generation_20261113_labels.csv": {
+    "bytes": 87034,
+    "sha256": "0b33b9d9bdbfca34dec2c508afeb7a584905404ce2b394257ecd9e56193ca511"
+  },
+  "public/run_generation_comparison.py": {
+    "bytes": 6592,
+    "sha256": "fef6d96b3c7ce79ddef0f04599ebaaadc94b38a2309fa954e79d2c4ce07011f2"
+  },
+  "public/generation_guard.py": {
+    "bytes": 1507,
+    "sha256": "d50edcf4bc4c47e90bdbd9e70f7975bd5208497dc249a9bc2d0eeaf8daf414f1"
+  },
+  "public/morpho_guard.py": {
+    "bytes": 961,
+    "sha256": "a6fca7c075ae6d8b197454dde468ed5af2bd3645b2bec92a6ab6892e69495da4"
+  },
+  "public/graph_builder.py": {
+    "bytes": 1198,
+    "sha256": "d0098b1fac23d0df9b71e7a4f3e42784c4b9998419bbc6862e5ecb6865d61f6d"
+  },
+  "public/run_comparison.py": {
+    "bytes": 3789,
+    "sha256": "932434494dbe7af7db8494905069a01f31b9097c7be0a2499bf3d96b7f19c5b1"
+  },
+  "data/jbb_attacks.json": {
+    "bytes": 29456,
+    "sha256": "6e27ab9e85cfa8df34e4dcd6c1c1004d456979a061384d0156c7e317d6422c36"
+  },
+  "data/benign_prompts.json": {
+    "bytes": 19789,
+    "sha256": "1a94445932f58b26459a4de6ca01b9693bc8cfa0b2b6d1bc54e2239db9d80b0d"
+  },
+  "data/dev_prompts.json": {
+    "bytes": 860,
+    "sha256": "f45d9ad4035b137bdd0f80199dc045123485ffb980e7d7802c1d50eabf29d8e0"
+  }
+}
