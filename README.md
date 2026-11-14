@@ -38,6 +38,12 @@ The structural rule intervened on 29/100 benign requests (29%): 6/70 ordinary an
 
 See the [evidence and verification commands](evidence/README.md), [scoring protocol](REPRODUCTION.md#generation-stage-run-of-2026-11-13), [case-level labels](evidence/generation_20261113_labels.csv), and [run manifest and metrics](evidence/generation_20261113_summary.json). The response scores are a preliminary unblinded assistant review. The manuscript's original run remains unverified.
 
+### Full rerun from a fresh clone
+
+The four-condition GPU experiment was rerun from a fresh GitHub checkout in the existing AutoDL Conda environment. Across 464 case-condition records, the terminal comparison reported zero differences in trigger steps or probe decisions and zero differences in decoded-response SHA-256 hashes. Morpho-Guard and Probe + Morpho each intervened on 15/16 attack requests and 29/100 benign requests (6/70 ordinary and 23/30 high-confusion). Neither probe-enabled condition blocked any of the 116 requests.
+
+The rerun terminal reported SHA-256 `dee5ccbc6923669999c76093b3af071a3507dc8cec9f76900b206a33b708b78f` for its private `full.jsonl` transcript. The [terminal screenshot](evidence/generation_rerun_terminal.png) records the comparison and the transcript checksum.
+
 ## Historical prompt-level regex pilot
 
 
