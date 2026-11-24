@@ -1,0 +1,46 @@
+{
+  "base": {
+    "multi": {
+      "DRIFTED": 249,
+      "CLEAN": 88,
+      "UNRESOLVED": 3,
+      "BLOCKED": 0
+    },
+    "embedded": {
+      "CLEAN": 164,
+      "DRIFTED": 86,
+      "UNRESOLVED": 12,
+      "NOT_RUN": 78
+    },
+    "standalone": {
+      "CLEAN": 33,
+      "DRIFTED": 18,
+      "UNRESOLVED": 9
+    },
+    "multi_runner_drift_count": 229,
+    "multi_reviewed_drift_pct": 73.24
+  },
+  "morpho": {
+    "multi": {
+      "DRIFTED": 249,
+      "CLEAN": 88,
+      "UNRESOLVED": 3,
+      "BLOCKED": 0
+    },
+    "embedded": {
+      "CLEAN": 164,
+      "DRIFTED": 86,
+      "UNRESOLVED": 12,
+      "NOT_RUN": 78
+    },
+    "standalone": {
+      "CLEAN": 33,
+      "DRIFTED": 18,
+      "UNRESOLVED": 9
+    },
+    "multi_runner_drift_count": 229,
+    "multi_reviewed_drift_pct": 73.24
+  },
+  "http_requests": 6660,
+  "interventions": 0
+}
